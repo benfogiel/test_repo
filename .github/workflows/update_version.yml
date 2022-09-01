@@ -20,3 +20,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           branch: '${{ steps.get-latest-tag.outputs.tag }}'
+          sha: '${{ github.event.pull_request.head.sha }}'
