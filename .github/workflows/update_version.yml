@@ -15,13 +15,17 @@ jobs:
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
-      - name: git
+      - name: create release branch
         run: |
           echo ${{ steps.vars.outputs.tag }}
           git config --global user.email "ben@h2clipper.com"
           git config --global user.name "Github Action"
           git checkout -b Release-${{ steps.vars.outputs.tag }}
+      - name: write release tag to configuration file
+        run: |
           sed -i "release: ${{ steps.vars.outputs.tag }}" default.cfg
+      - name: push to release branch
+        run: |
           git add .
           git commit -m "Release ${{ steps.vars.outputs.tag }}"
           git push origin Release-${{ steps.vars.outputs.tag }}
