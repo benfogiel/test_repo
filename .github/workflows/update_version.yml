@@ -1,0 +1,18 @@
+on:
+  push:
+    branches:
+      master
+
+jobs:
+  # create the release
+  write-version:
+    name: "Update Version"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Update version
+        uses: brettdorrans/write-version-to-file@master
+        with:
+          filename: '.VERSION'
+          placeholder: '${VERSION}'
