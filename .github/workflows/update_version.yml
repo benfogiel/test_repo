@@ -13,7 +13,7 @@ jobs:
 
       - name: "get release tag"
         run: |
-          export RELEASE_TAG=$(git describe --tags --abbrev=0)
+          export echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
           echo "The release tag is $RELEASE_TAG"
 
       - name: git
