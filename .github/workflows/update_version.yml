@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Update version
-        uses: brettdorrans/write-version-to-file@main
+        uses: brettdorrans/write-version-to-file@master
         with:
           filename: '.VERSION'
           placeholder: '${VERSION}'
