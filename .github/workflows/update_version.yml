@@ -6,15 +6,15 @@ on:
 jobs:
   # create the release
   build:
-    name: "Build and Push version branch"
+    name: Build and Push version branch
     runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@v2
 
-      - name: "get release tag"
+      - name: get release tag
+        id: vars
         run: |
           run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-          echo "The release tag is ${{ steps.vars.outputs.tag }}"
 
       - name: git
         run: |
