@@ -15,10 +15,10 @@ jobs:
         id: get-latest-tag
         if: ${{ steps.release-label.outputs.level != null }}
 
-      env:
-        RELEASE_TAG: ${{ steps.get-latest-tag.outputs.tag }}
-      
-      run: echo "The release tag is $RELEASE_TAG"
+      - name: "release tag"
+        env:
+          RELEASE_TAG: ${{ steps.get-latest-tag.outputs.tag }}
+        run: echo "The release tag is $RELEASE_TAG"
 
       - name: git
         run: |
