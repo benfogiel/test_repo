@@ -1,7 +1,7 @@
 on:
   push:
-    branches:
-      main
+    tags:
+      - 'v*.*.*'
 
 jobs:
   # create the release
@@ -13,14 +13,15 @@ jobs:
 
       - name: "get release tag"
         run: |
-          export echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-          echo "The release tag is $RELEASE_TAG"
+          run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+          echo "The release tag is ${{ steps.vars.outputs.tag }}"
 
       - name: git
         run: |
-          git checkout -b $RELEASE_TAG
+          echo ${{ steps.vars.outputs.tag }}
+          git checkout -b ${{ steps.vars.outputs.tag }}
           git describe --tags --abbrev=0 > version.txt
           git add .
-          git commit -m "${{ steps.get-latest-tag.outputs.tag }}"
-          git push origin $RELEASE_TAG
+          git commit -m "${{ steps.vars.outputs.tag }}"
+          git push origin ${{ steps.vars.outputs.tag }}
         
