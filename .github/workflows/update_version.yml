@@ -20,9 +20,9 @@ jobs:
           echo ${{ steps.vars.outputs.tag }}
           git config --global user.email "ben@h2clipper.com"
           git config --global user.name "Github Action"
-          git checkout -b ${{ steps.vars.outputs.tag }}
+          git checkout -b Release_${{ steps.vars.outputs.tag }}
           git describe --tags --abbrev=0 > version.txt
           git add .
-          git commit -m "${{ steps.vars.outputs.tag }}"
+          git commit -m "Release ${{ steps.vars.outputs.tag }}"
           git push origin ${{ steps.vars.outputs.tag }}
         
