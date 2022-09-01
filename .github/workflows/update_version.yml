@@ -15,11 +15,16 @@ jobs:
         id: get-latest-tag
         if: ${{ steps.release-label.outputs.level != null }}
 
+      env:
+        RELEASE_TAG: ${{ steps.get-latest-tag.outputs.tag }}
+      
+      run: echo "The release tag is $RELEASE_TAG"
+
       - name: git
         run: |
-          git checkout -b '${{ steps.get-latest-tag.outputs.tag }}'
+          git checkout -b $RELEASE_TAG
           git describe --tags --abbrev=0 > version.txt
           git add .
           git commit -m "${{ steps.get-latest-tag.outputs.tag }}"
-          git push origin ${{ steps.get-latest-tag.outputs.tag }}
+          git push origin $RELEASE_TAG
         
