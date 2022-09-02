@@ -33,4 +33,9 @@ jobs:
           git add .
           git commit -m "Release ${{ steps.vars.outputs.tag }}"
           git push origin Release-${{ steps.vars.outputs.tag }}
+          
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
         
