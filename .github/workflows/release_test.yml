@@ -11,6 +11,7 @@ jobs:
     runs-on: [ ubuntu-latest ]
     outputs:
       release-tag: ${{ steps.vars.outputs.tag }}
+      commit-id: ${{ steps.commit_id.outputs.tag }}
     steps:
       - uses: actions/checkout@v3
 
@@ -39,19 +40,21 @@ jobs:
           git add .
           git commit -m "Release ${{ steps.vars.outputs.tag }}"
           git push origin release-${{ steps.vars.outputs.tag }}
+      
+      - name: get commit id
+        id: commit_id
+        run: echo ::set-output name=tag::$(git log -n 1 --pretty=format:"%H")
        
   release:
     needs: build
     runs-on: [ ubuntu-latest ]
+    outputs:
+      release-tag: ${{ needs.build.steps.vars.outputs.tag }}
     steps:
-      - name: get commit id
-        id: commit_id
-        run: echo ::set-output name=tag::$(git log -n 1 --pretty=format:"%H")
-
       - name: create release
         uses: ncipollo/release-action@v1
         with:
-          commit: ${{ steps.commit_id.outputs.tag }}
+          commit: ${{ needs.build.outputs.commit-id }}
           tag: ${{ needs.build.outputs.release-tag }}
           generateReleaseNotes: true
        
@@ -61,9 +64,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: release-${{ needs.build.outputs.release-tag }}
+          ref: release-${{ needs.release.outputs.release-tag }}
       - name: check
         run: |
-          echo ${{ needs.build.outputs.release-tag }}
+          echo ${{ needs.release.outputs.release-tag }}
           echo $(git branch)
   
