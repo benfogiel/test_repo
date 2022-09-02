@@ -34,8 +34,11 @@ jobs:
           git commit -m "Release ${{ steps.vars.outputs.tag }}"
           git push origin Release-${{ steps.vars.outputs.tag }}
           
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Create Release
+        uses: aaiezza/create-release@master
+        id: create_release
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
-        
+          release_branch: Release-${{ steps.vars.outputs.tag }}
+          tag: ${{ steps.vars.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
