@@ -24,7 +24,7 @@ jobs:
           
       - name: write release tag to configuration file
         env:
-          RELEASE_TEXT="release: ${{ steps.vars.outputs.tag }}"
+          RELEASE_TEXT: "release: ${{ steps.vars.outputs.tag }}"
         run: |
           sed -i '1s/.*/$RELEASE_TEXT/' default.cfg
           
