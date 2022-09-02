@@ -11,7 +11,7 @@ jobs:
    - name: get release tag
      id: vars
      run: |
-      id=$(echo ${{ github.event.head_commit.message }} | cut -c11)
+      id=$(echo ${{ github.event.head_commit.message }} | cut -c11-)
       echo ::set-output name=tag::$id
       echo The release tag is $id
 
