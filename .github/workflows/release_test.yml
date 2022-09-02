@@ -9,6 +9,7 @@ jobs:
 
     - name: check commit message
       if: contains(github.event.head_commit.message, 'release - v*.*.*')
+      run: echo commit message did not meet conditions for a release
 
     - name: get release tag
       id: vars
