@@ -7,9 +7,26 @@ on:
       - completed
       
 jobs:
-  test:
+
+  get-tag:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: print
-        run: echo hi!
+      - uses: actions/checkout@v2.2.0
+        with:
+          fetch-depth: 0 # Required due to the way Git works, without it this action won't be able to find any or the correct tags
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        
+  azure:
+    needs: get-tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: release-${{ needs.get-tag.steps.previoustag.outputs.tag }}
+      - name: check
+        run: |
+          echo ${{ needs.get-tag.steps.previoustag.outputs.tag }}
+          echo $(git branch)
