@@ -33,10 +33,14 @@ jobs:
           git add .
           git commit -m "Release ${{ steps.vars.outputs.tag }}"
           git push origin release-${{ steps.vars.outputs.tag }}
+      
+      - name: get commit id
+        id: commit_id
+        run: echo ::set-output name=tag::$(git log -n 1 --pretty=format:"%H")
           
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
+          commit: ${{ steps.commit_id.outputs.tag }}
+          tag: ${{ steps.vars.outputs.tag }}
           generateReleaseNotes: true
-          owner: benfogiel
-          repo: test_repo/tree/release-${{ steps.vars.outputs.tag }}
