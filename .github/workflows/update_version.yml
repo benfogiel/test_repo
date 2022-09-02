@@ -34,7 +34,8 @@ jobs:
           git commit -m "Release ${{ steps.vars.outputs.tag }}"
           git push origin Release-${{ steps.vars.outputs.tag }}
           
-      - uses: technote-space/release-github-actions@v6
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          branch_name: "Release-${{ steps.vars.outputs.tag }}"
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
         
