@@ -24,7 +24,8 @@ jobs:
           
       - name: write release tag to configuration file
         run: |
-          sed -i sed -e '1s/release: NA/release: ${{ steps.vars.outputs.tag }}' default.cfg
+          release_text="release: ${{ steps.vars.outputs.tag }}
+          sed -i sed -e '1s/.*/$release_text/' default.cfg
           
       - name: push to release branch
         run: |
