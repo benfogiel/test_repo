@@ -48,8 +48,6 @@ jobs:
   release:
     needs: build
     runs-on: [ ubuntu-latest ]
-    outputs:
-      release-tag: ${{ needs.build.steps.vars.outputs.tag }}
     steps:
       - name: create release
         uses: ncipollo/release-action@v1
@@ -59,14 +57,14 @@ jobs:
           generateReleaseNotes: true
        
   deploy-azure:
-    needs: release
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: release-${{ needs.release.outputs.release-tag }}
+          ref: release-${{ needs.build.outputs.release-tag }}
       - name: check
         run: |
-          echo ${{ needs.release.outputs.release-tag }}
+          echo ${{ needs.build.outputs.release-tag }}
           echo $(git branch)
   
