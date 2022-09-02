@@ -39,12 +39,7 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           
-  release:
-    name: Release branch
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
       - uses: technote-space/release-github-actions@v6
         with:
-          branch_name: "Release-${{ build.steps.vars.outputs.tag }}"
+          branch_name: "Release-${{ steps.vars.outputs.tag }}"
         
