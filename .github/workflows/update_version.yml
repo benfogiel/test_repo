@@ -20,7 +20,7 @@ jobs:
           echo ${{ steps.vars.outputs.tag }}
           git config --global user.email "ben@h2clipper.com"
           git config --global user.name "Github Action"
-          git checkout -b Release-${{ steps.vars.outputs.tag }}
+          git checkout -b release/${{ steps.vars.outputs.tag }}
           
       - name: write release tag to configuration file
         env:
@@ -32,13 +32,7 @@ jobs:
         run: |
           git add .
           git commit -m "Release ${{ steps.vars.outputs.tag }}"
-          git push origin Release-${{ steps.vars.outputs.tag }}
+          git push origin release/${{ steps.vars.outputs.tag }}
           
       - name: Create Release
-        uses: aaiezza/create-release@master
-        id: create_release
-        with:
-          release_branch: Release-${{ steps.vars.outputs.tag }}
-          tag: ${{ steps.vars.outputs.tag }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ncipollo/release-action@v1
