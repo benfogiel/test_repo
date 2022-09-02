@@ -38,4 +38,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           generateReleaseNotes: true
-          repo: https://github.com/benfogiel/test_repo/tree/release/${{ steps.vars.outputs.tag }}
+          owner: benfogiel
+          repo: test_repo/release/${{ steps.vars.outputs.tag }}
