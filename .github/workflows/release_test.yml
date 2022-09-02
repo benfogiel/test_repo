@@ -1,65 +1,69 @@
 name: Create Release
 on: 
- push:
-  branches:
-   main
+  push:
+    branches:
+      main
 
 jobs:
 
- check_commit:
-  if: contains(github.event.head_commit.message, 'release - v')
-  runs-on: [ ubuntu-latest ]
-  outputs:
-   release-tag: ${{ steps.vars.outputs.tag }}
-  steps:
-   - uses: actions/checkout@v3
+  build:
+    if: contains(github.event.head_commit.message, 'release - v')
+    runs-on: [ ubuntu-latest ]
+    outputs:
+      release-tag: ${{ steps.vars.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v3
 
-   - name: get release tag
-     id: vars
-     run: |
-      id=$(echo ${{ github.event.head_commit.message }} | cut -c11-)
-      echo ::set-output name=tag::$id
-      echo The release tag is $id
+      - name: get release tag
+        id: vars
+        run: |
+          id=$(echo ${{ github.event.head_commit.message }} | cut -c11-)
+          echo ::set-output name=tag::$id
+          echo The release tag is $id
 
-   - name: create release branch
-     run: |
-      echo ${{ steps.vars.outputs.tag }}
-      git config --global user.email "ben@h2clipper.com"
-      git config --global user.name "Github Action"
-      git checkout -b release-${{ steps.vars.outputs.tag }}
+      - name: create release branch
+        run: |
+          echo ${{ steps.vars.outputs.tag }}
+          git config --global user.email "ben@h2clipper.com"
+          git config --global user.name "Github Action"
+          git checkout -b release-${{ steps.vars.outputs.tag }}
 
-   - name: write release tag to configuration file
-     env:
-       RELEASE_TEXT: "release: ${{ steps.vars.outputs.tag }}"
-     run: |
-       sed -i '1s/.*/${{ env.RELEASE_TEXT }}/' default.cfg
+      - name: write release tag to configuration file
+        env:
+          RELEASE_TEXT: "release: ${{ steps.vars.outputs.tag }}"
+        run: |
+          sed -i '1s/.*/${{ env.RELEASE_TEXT }}/' default.cfg
 
-   - name: push to release branch
-     run: |
-       git add .
-       git commit -m "Release ${{ steps.vars.outputs.tag }}"
-       git push origin release-${{ steps.vars.outputs.tag }}
-
-   - name: get commit id
-     id: commit_id
-     run: echo ::set-output name=tag::$(git log -n 1 --pretty=format:"%H")
-     
-   - name: create release
-     uses: ncipollo/release-action@v1
-     with:
-       commit: ${{ steps.commit_id.outputs.tag }}
-       tag: ${{ steps.vars.outputs.tag }}
-       generateReleaseNotes: true
+      - name: push to release branch
+        run: |
+          git add .
+          git commit -m "Release ${{ steps.vars.outputs.tag }}"
+          git push origin release-${{ steps.vars.outputs.tag }}
        
- deploy-azure:
-    needs: check_commit
+  release:
+    needs: build
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: get commit id
+        id: commit_id
+        run: echo ::set-output name=tag::$(git log -n 1 --pretty=format:"%H")
+
+      - name: create release
+        uses: ncipollo/release-action@v1
+        with:
+          commit: ${{ steps.commit_id.outputs.tag }}
+          tag: ${{ needs.build.outputs.release-tag }}
+          generateReleaseNotes: true
+       
+  deploy-azure:
+    needs: release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: release-${{ needs.check_commit.outputs.release-tag }}
+          ref: release-${{ needs.build.outputs.release-tag }}
       - name: check
         run: |
-          echo ${{ needs.check_commit.outputs.release-tag }}
+          echo ${{ needs.build.outputs.release-tag }}
           echo $(git branch)
   
