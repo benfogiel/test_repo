@@ -21,9 +21,11 @@ jobs:
           git config --global user.email "ben@h2clipper.com"
           git config --global user.name "Github Action"
           git checkout -b Release-${{ steps.vars.outputs.tag }}
+          
       - name: write release tag to configuration file
         run: |
-          sed -i "release: ${{ steps.vars.outputs.tag }}" default.cfg
+          sed -i sed -e '1s/release: NA/release: ${{ steps.vars.outputs.tag }}' default.cfg
+          
       - name: push to release branch
         run: |
           git add .
