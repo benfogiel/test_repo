@@ -48,4 +48,16 @@ jobs:
        commit: ${{ steps.commit_id.outputs.tag }}
        tag: ${{ steps.vars.outputs.tag }}
        generateReleaseNotes: true
+       
+ deploy-azure:
+    needs: check_commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: release-${{ needs.check_commit.steps.vars.outputs.tag }}
+      - name: check
+        run: |
+          echo ${{ needs.check_commit.steps.vars.outputs.tag }}
+          echo $(git branch)
   
