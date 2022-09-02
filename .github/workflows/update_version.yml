@@ -23,9 +23,10 @@ jobs:
           git checkout -b Release-${{ steps.vars.outputs.tag }}
           
       - name: write release tag to configuration file
+        env:
+          RELEASE_TEXT: "release: ${{ steps.vars.outputs.tag }}"
         run: |
-          release_text="release: ${{ steps.vars.outputs.tag }}"
-          sed -i '1s/.*/${release_text}/' default.cfg
+          sed -i '1s/.*/$RELEASE_TEXT/' default.cfg
           
       - name: push to release branch
         run: |
