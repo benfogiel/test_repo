@@ -1,11 +1,14 @@
 name: Azure
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_run:
+    workflows: ["release"]
+    types:
+      - completed
       
 jobs:
   test:
     runs-on: ubuntu-latest
-    run: echo hi!
+    steps:
+      - name: print
+        run: echo hi!
