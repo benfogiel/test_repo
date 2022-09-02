@@ -9,6 +9,8 @@ jobs:
  check_commit:
   if: contains(github.event.head_commit.message, 'release - v')
   runs-on: [ ubuntu-latest ]
+  outputs:
+   release-tag: ${{ steps.vars.outputs.tag }}
   steps:
    - uses: actions/checkout@v3
 
@@ -55,9 +57,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: release-${{ needs.check_commit.steps.vars.outputs.tag }}
+          ref: release-${{ needs.check_commit.outputs.release-tag }}
       - name: check
         run: |
-          echo ${{ needs.check_commit.steps.vars.outputs.tag }}
+          echo ${{ needs.check_commit.outputs.release-tag }}
           echo $(git branch)
   
