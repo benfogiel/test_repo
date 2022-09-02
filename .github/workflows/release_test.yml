@@ -1,8 +1,8 @@
-name: Release
+name: Create Release
 on: push
 
 jobs:
- build:
+ release:
   if: contains(github.event.head_commit.message, 'release - v')
   runs-on: [ ubuntu-latest ]
   steps:
@@ -38,7 +38,7 @@ jobs:
      id: commit_id
      run: echo ::set-output name=tag::$(git log -n 1 --pretty=format:"%H")
 
-   - name: Create Release
+   - name: create release
      uses: ncipollo/release-action@v1
      with:
        commit: ${{ steps.commit_id.outputs.tag }}
