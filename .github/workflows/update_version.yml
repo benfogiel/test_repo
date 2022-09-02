@@ -37,4 +37,5 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          repo: release/${{ steps.vars.outputs.tag }}
+          generateReleaseNotes: true
+          repo: https://github.com/benfogiel/test_repo/tree/release/${{ steps.vars.outputs.tag }}
