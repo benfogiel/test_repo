@@ -39,4 +39,4 @@ jobs:
         with:
           generateReleaseNotes: true
           owner: benfogiel
-          repo: /test_repo/tree/release/${{ steps.vars.outputs.tag }}
+          repo: test_repo/tree/release/${{ steps.vars.outputs.tag }}
